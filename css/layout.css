@@ -1,0 +1,87 @@
+body {
+  overflow: hidden;
+  margin: 0px;
+}
+h2 {
+  position: relative;
+  width: max-content;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: grey;
+  margin: 0;
+}
+
+#logo {
+  height: 10%;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+.matcha-color {
+  color: darkseagreen;
+}
+
+.darkgray-color {
+  color: darkgray;
+}
+
+#pen {
+  margin: auto;
+  border: 1px solid gray;
+  border-radius: 3px;
+  width: 80%;
+  height: 80%;
+  min-width: 400px;
+  min-height: 300px;
+}
+
+#matcha {
+  position: absolute;
+  display: none;
+}
+
+#earl {
+  position: absolute;
+  display: none;
+}
+
+#buttons {
+  height: 10%;
+}
+
+#buttons td {
+  width: 20%;
+  height: 100%;
+}
+
+#start-btn {
+  position: relative;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  border-radius: 5px;
+  border: none;
+  font-size: 1em;
+}
+
+#stop-btn {
+  position: relative;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  border-radius: 5px;
+  border: none;
+  font-size: 1em;
+}
+
+#carrot {
+  position: absolute;
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  #pen {
+    min-width: 300px;
+    min-height: 400px;
+  }
+}

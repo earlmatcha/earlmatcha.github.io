@@ -1,7 +1,9 @@
 body {
   overflow: hidden;
   margin: 0px;
+  background-color: #fcfafc;
 }
+
 h2 {
   position: relative;
   width: max-content;
@@ -10,6 +12,26 @@ h2 {
   transform: translate(-50%, -50%);
   color: grey;
   margin: 0;
+}
+
+label {
+  color: #555;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-overflow: wrap;
+  background-color: white;
+  border-radius: 3px;
+  border: 1px solid gray;
+  height: 100%;
+  width: 100%;
+  text-align-last: center;
+}
+
+option {
+  text-align: center;
 }
 
 #logo {
@@ -25,14 +47,22 @@ h2 {
   color: darkgray;
 }
 
+.label-gray-color {
+  color: #555;
+}
+
 #pen {
   margin: auto;
   border: 1px solid gray;
   border-radius: 3px;
   width: 80%;
-  height: 80%;
+  height: 70%;
   min-width: 400px;
   min-height: 300px;
+  background-color: white;
+  background-repeat: repeat;
+  background-attachment: fixed;
+  background-position: center;
 }
 
 #matcha {
@@ -46,42 +76,46 @@ h2 {
 }
 
 #buttons {
-  height: 10%;
+  height: 20%;
+  width: 80%;
+  margin: auto;
 }
 
-#buttons td {
-  width: 20%;
+#button-grid {
   height: 100%;
+  width: 100%;
 }
 
-#start-btn {
-  position: relative;
-  left: 10%;
-  width: 80%;
-  height: 80%;
-  border-radius: 5px;
-  border: none;
-  font-size: 1em;
+#button-grid td {
+  width: 16%;
+  text-align: center;
 }
 
-#stop-btn {
-  position: relative;
-  left: 10%;
-  width: 80%;
-  height: 80%;
-  border-radius: 5px;
-  border: none;
-  font-size: 1em;
+#button-grid tr {
+  height: 33.33%;
 }
 
-#carrot {
+#treat {
   position: absolute;
   display: none;
+}
+
+.snowflake {
+  position: absolute;
+  display: inline;
+  left: 200px;
+  top: 10px;
+  z-index: 100;
+}
+
+.vertical-align-bottom {
+  vertical-align: bottom;
 }
 
 @media screen and (max-width: 768px) {
   #pen {
     min-width: 300px;
     min-height: 400px;
+    height: 70%;
   }
 }

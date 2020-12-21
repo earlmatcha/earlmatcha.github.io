@@ -14,29 +14,48 @@
 	</head>
 
 	<body>
+		<div id="particles"></div>
 		<div id="logo">
 			<h2>earl <span class="darkgray-color">&</span> <span class="matcha-color">matcha</span></h2>
 		</div>
 
 		<div id="pen">
-			<img id="matcha" src="img/matcha_stop.png">
-			<img id="earl" src="img/earl_stop.png">
-			<img id="carrot" src="img/carrot.png">
+			<img id="matcha" src="img/matcha_idle.gif">
+			<img id="earl" src="img/earl_idle.gif">
+			<img id="treat" src="img/carrot.png">
 		</div>
 
-		<!--
-		<table id="buttons" style="width:100%">
-		  <tr>
-		    <td></td>
-		    <td>
-					<button id="start-btn">start</button>
-				</td>
-		    <td>
-					<button id="stop-btn">stop</button>
-				</td>
-		    <td></td>
-		  </tr>
-		</table>
-		-->
+		<div id="buttons">
+			<table id="button-grid">
+				<tr>
+					<!--
+					<td></td>
+			    <td class="label-gray-color vertical-align-bottom">theme:</td>
+					<td></td>
+			    <td class="label-gray-color vertical-align-bottom">treat:</td>
+			    <td></td>
+					-->
+				</tr>
+				<tr>
+			    <td></td>
+			    <td>
+						<select id="themes" name="themes">
+					    <option value="none">&#x1F407;</option> <!--  &#x2716; -->
+					    <option value="christmas">&#x1F385;</option>
+					  </select>
+					</td>
+					<td></td>
+					<td>
+						<select id="treats" name="treats">
+					    <option value="carrot" selected>&#x1F955;</option>
+					    <option value="banana">&#x1F34C;</option>
+					  </select>
+					</td>
+					<td></td>
+				</tr>
+				<tr></tr>
+			</table>
+		</div>
+
   </body>
 </html>

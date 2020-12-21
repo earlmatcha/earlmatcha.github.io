@@ -4,25 +4,45 @@ const BUN_STATES = {
   STAND : "_stand.gif",
 };
 
+// Month starts at 0
+const DEFAULT_THEME_DATES = {
+  'christmas' : {
+    start : {
+      month : 11,
+      dayOfMonth : 1
+    },
+    end : {
+      month : 11,
+      dayOfMonth : 25
+    }
+  }
+}
+
 const BUN_WIDTH = BUN_HEIGHT = 60;
 const BUN_MAX_DIST = 30;
 const PROXIMITY = 30;
 const TREAT_WIDTH = 32;
 const MAX_IDLE = 30;
 const MIN_IDLE = 5;
+const SNOWFLAKE_MAX_DIST = 30;
+const SNOWFLAKE_DIMENSIONS = 16;
 var treatX;
 var treatY;
 var isMouseInPen = false;
+var useDefaultTheme = true;
+var spawnParticleCounter = 0;
 
 $(document).ready(function() {
   var interval;
   var matcha = $('#matcha');
   var earl = $('#earl');
   var pen = $('#pen');
-  var carrot = $('#carrot');
+  var treat = $('#treat');
+  var themes = $('#themes');
 
   placeBuns();
-  setInterval(render, 250);
+  render();
+  interval = setInterval(render, 250);
 
   function placeBuns() {
     let penMinX = pen.offset().left;
@@ -49,20 +69,23 @@ $(document).ready(function() {
     updateState(earl);
   }
 
-/*
-  $('#start-btn').click(function() {
-    interval = setInterval(render, 250);
+  /* Debugging purposes */
+  $(document).keypress(function(e) {
+    if(e.which == 32) {
+      if (!interval) {
+        interval = setInterval(render, 250);
+      }
+      else {
+        clearInterval(interval);
+        interval = null;
+      }
+    }
   });
-
-  $('#stop-btn').click(function() {
-    console.log("ahhh");
-    clearInterval(interval);
-  });
-*/
 
   pen.on('touchstart', function(event) {
     event.preventDefault();
-    carrot.show();
+    setTreatImage();
+    treat.show();
     treatX = event.touches[0].clientX;
     treatY = event.touches[0].clientY;
 
@@ -76,16 +99,20 @@ $(document).ready(function() {
 
     moveTreatTo(treatX, treatY);
     isMouseInPen = insidePen(treatX, treatY, 1, 1);
-    isMouseInPen ? carrot.show() : carrot.hide();
+    isMouseInPen ? treat.show() : treat.hide();
   });
 
   pen.on('touchend', function(event) {
-    carrot.hide();
+    treat.hide();
     isMouseInPen = false;
   });
 
   pen.on('touchcancel', function(event) {
     console.log("touch canceled");
+  });
+
+  themes.on('change', function() {
+    useDefaultTheme = false;
   });
 
   function render() {
@@ -102,6 +129,8 @@ $(document).ready(function() {
 
     updateState(matcha);
     updateState(earl);
+
+    renderTheme();
   }
 
   function moveBun(bun, point) {
@@ -240,25 +269,111 @@ $(document).ready(function() {
       && (matchaRect.top < earlRect.top + earlRect.height)
       && (earlRect.top < matchaRect.top + matchaRect.height));
   }
+
+  function renderTheme() {
+    let theme;
+    let date = new Date();
+    let month = date.getMonth();
+    let dayOfMonth = date.getDate();
+
+    // Use dropdown when no default exists
+    if (!useDefaultTheme) {
+      theme = themes.find(":selected").val();
+    }
+    else {
+      // Check if current date is within any default date range
+      for (defaultTheme in DEFAULT_THEME_DATES) {
+        let currentDefaultTheme = DEFAULT_THEME_DATES[defaultTheme];
+        if (month >= currentDefaultTheme.start.month && month <= currentDefaultTheme.end.month
+            && dayOfMonth >= currentDefaultTheme.start.dayOfMonth && dayOfMonth <= currentDefaultTheme.end.dayOfMonth) {
+          theme = defaultTheme;
+          themes.val(theme);
+        }
+      }
+    }
+
+    // Can use switch
+    if (theme == 'christmas') {
+      pen.css('background-image', 'url("img/mat_christmas.png")');
+      pen.css('background-color', 'none');
+      if (spawnParticleCounter > 1) {
+        spawnParticleCounter = 0;
+      }
+
+      processSnowflakes();
+    }
+    else {
+      pen.css('background-image', 'none');
+      pen.css('background-color', 'white');
+
+      removeThemedParticles();
+    }
+  }
+
+  function processSnowflakes() {
+    // Spawn snowflake
+    if (spawnParticleCounter == 0) {
+      let newSnowflakePosition = 'style="left: ' + Math.random() * window.innerWidth + 'px; top: 0px;"';
+      let newGifSrc = 'src="img/snowflake.gif?' + Math.random() + '" ';
+      $('#particles').append('<img class="snowflake" ' + newGifSrc + newSnowflakePosition + '>');
+    }
+
+    spawnParticleCounter++;
+
+    // Move all snowflakes and remove if exits window
+    $('.snowflake').each(function() {
+      let currentSnowflake = $(this);
+      let currentPosition = currentSnowflake.position();
+      // Snowflake can move left/right and down
+      let snowflakeXDist = Math.random() * 2 * SNOWFLAKE_MAX_DIST - SNOWFLAKE_MAX_DIST;
+      let snowflakeYDist = Math.random() * 2 * SNOWFLAKE_MAX_DIST;
+
+      let snowflakeNewX = currentPosition.left + snowflakeXDist;
+      let snowflakeNewY = currentPosition.top + snowflakeYDist;
+
+      if ((snowflakeNewY + SNOWFLAKE_DIMENSIONS) > window.innerHeight
+          || (snowflakeNewX + SNOWFLAKE_DIMENSIONS) > window.innerWidth
+          || snowflakeNewX < 0) {
+        currentSnowflake.remove();
+      }
+      else {
+        currentSnowflake.css('left', snowflakeNewX);
+        currentSnowflake.css('top', snowflakeNewY);
+      }
+    });
+  }
+
+  function removeThemedParticles() {
+    $('.snowflake').each(function() {
+      $(this).remove();
+    });
+  }
 });
 
 $(document).mousemove(function(event){
   // Only run for desktop
   if (matchMedia('(pointer:fine)').matches) {
-    let carrot = $('#carrot');
+    setTreatImage();
+    let treat = $('#treat');
     treatX = event.pageX;
     treatY = event.pageY;
 
     moveTreatTo(treatX, treatY);
     isMouseInPen = insidePen(treatX, treatY, 1, 1);
-    isMouseInPen ? carrot.show() : carrot.hide();
+    isMouseInPen ? treat.show() : treat.hide();
   }
 });
 
 function moveTreatTo(treatX, treatY) {
-  let carrot = $('#carrot');
-  carrot.css('left', treatX - TREAT_WIDTH * 0.5);
-  carrot.css('top', treatY - TREAT_WIDTH * 0.5);
+  let treat = $('#treat');
+  treat.css('left', treatX - TREAT_WIDTH * 0.5);
+  treat.css('top', treatY - TREAT_WIDTH * 0.5);
+}
+
+function setTreatImage() {
+  let selectedTreat = $('#treats').find(":selected").val();
+  let treat = $('#treat');
+  treat.attr('src', 'img/' + selectedTreat + '.png');
 }
 
 function insidePen(x, y, width, height) {
